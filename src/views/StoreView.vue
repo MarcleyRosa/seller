@@ -4,16 +4,22 @@ import { onMounted, ref } from 'vue';
 import router from '@/router';
 import { useRoute } from 'vue-router';
 
-const data = ref([])
+interface store {
+  store_id: string, id: string, title: string, price: string, image: string
+}
+
+const data = ref<store[]>([])
 const route = useRoute()
 
 const edit = async ({ target: { id }}: any) => {
-  router.push(`/products/edit/${id}`)
+  router.push(`/products/${id}/store/${route.params.id}`)
+}
+
+const create = () => {
+  router.push(`/products/create/${route.params.id}`)
 }
 
 onMounted(async () => {
-  console.log(router);
-  
   data.value = await useFetchGet(`http://localhost:3000/store/${route.params.id}/products`)
 })
 
@@ -21,9 +27,9 @@ onMounted(async () => {
 
 <template>
   <div>
-    
-    <div v-for="{ title, id, price, image, store_id } in data" :key="id">
-      <h1>{{ store_id  }}</h1>
+    <h1>Produtos</h1>
+    <button @click="create">Criar Produto</button>
+    <div v-for="{ title, id, price, image } in data" :key="id">
       <span>{{ title }}</span> <br>
       <p>{{ price }}</p>
       <button>
