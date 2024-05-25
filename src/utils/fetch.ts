@@ -23,13 +23,15 @@ export function useFetch(url: string) {
 }
 
 export async function useFetchPost(url: string, body: any) {
+  const token: string | null = localStorage.getItem('token')
   const options = { 
     body: JSON.stringify(body),
     method: 'POST',
     headers: {
     "Accept": "application/json",
     "Content-Type": "application/json",
-    "X-API-KEY": "ZwtuEmALA8tBb9Dunb0uakD2s14="
+    "X-API-KEY": "ZwtuEmALA8tBb9Dunb0uakD2s14=",
+    "Authorization": `Bearer ${token}`
     }
   }
 
