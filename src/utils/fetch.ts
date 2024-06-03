@@ -1,81 +1,110 @@
-import { ref, watchEffect, toValue } from 'vue'
+class Request {
+  private baseURL: string
 
-export function useFetch(url: string) {
-  const data = ref(null)
-  const error = ref(null)
-
-  const fetchData = () => {
-    // reset state before fetching..
-    data.value = null
-    error.value = null
-
-    fetch(toValue(url))
-      .then((res) => res.json())
-      .then((json) => (data.value = json))
-      .catch((err) => (error.value = err))
+  constructor(baseURL: string) {
+    this.baseURL = baseURL
   }
 
-  watchEffect(() => {
-    fetchData()
-  })
+  private async request<T>(endpoint: string, method: string, data?: any): Promise<T> {
+    const url = `${this.baseURL}${endpoint}`
 
-  return { data, error }
-}
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token')
 
-export async function useFetchPost(url: string, body: any) {
-  const token: string | null = localStorage.getItem('token')
-  const options = { 
-    body: JSON.stringify(body),
-    method: 'POST',
-    headers: {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-    "X-API-KEY": "ZwtuEmALA8tBb9Dunb0uakD2s14=",
-    "Authorization": `Bearer ${token}`
+    const options: RequestInit = {
+      method,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-API-KEY': 'D+PQFRWy9hb/RqN2bYZnHXUNIMY=',
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+    if (data) {
+      options.body = JSON.stringify(data)
+    }
+
+    try {
+      const response = await fetch(url, options)
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      if (response.status === 204) {
+        return null as T
+      }
+      return await response.json()
+    } catch (error) {
+      console.error('Fetch error:', error)
+      throw error
     }
   }
 
-  const response = await fetch(url, options)
-
-  const json = await response.json()
-
-  return json
-}
-
-export async function useFetchUpdate(url: string, body: any) {
-  const options = { 
-    body: JSON.stringify(body),
-    method: 'PATCH',
-    headers: {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-    "X-API-KEY": "ZwtuEmALA8tBb9Dunb0uakD2s14="
-    }
+  public get<T>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, 'GET')
   }
 
-  const response = await fetch(url, options)
-
-  const json = await response.json()
-
-  return json
-}
-
-
-export async function useFetchGet(url: string) {
-  const token: string | null = localStorage.getItem('token')
-  
-  const options = { 
-    method: 'GET',
-    headers: {
-    "Accept": "application/json",
-    "X-API-KEY": "bUaKpEmhR2CnIl8mdO5zjHiOmWw=",
-    "Authorization": `Bearer ${token}`
-    }
+  public post<T>(endpoint: string, data: any): Promise<T> {
+    return this.request<T>(endpoint, 'POST', data)
   }
 
-  const response = await fetch(url, options)
+  public put<T>(endpoint: string, data: any): Promise<T> {
+    return this.request<T>(endpoint, 'PUT', data)
+  }
 
-  const json = await response.json()
+  public patch<T>(endpoint: string, data: any): Promise<T> {
+    return this.request<T>(endpoint, 'PATCH', data)
+  }
 
-  return json
+  public delete<T>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, 'DELETE')
+  }
+  public async uploadImage<T>(endpoint: string, body: any): Promise<T> {
+    const url = `${this.baseURL}${endpoint}`
+    const token: string | null = localStorage.getItem('token')
+    // const convertBody = Object.entries(body)
+
+    // convertBody.forEach((data) => {
+    //   const [key, value] = data;
+    //   formData.append(key, value as any)
+    // })
+    const formData = new FormData()
+
+    console.log('bodyyyyy', body)
+
+    formData.append('store[name]', body.name)
+    formData.append('store[image]', body.image)
+
+    for (const pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1])
+    }
+    console.log('formData', formData)
+
+    console.log('tokennnnnn', token)
+
+    const options = {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Accept: 'application/json',
+        // 'Content-Type': 'multipart/form-data',
+        'X-API-KEY': 'ZwtuEmALA8tBb9Dunb0uakD2s14=',
+        Authorization: `Bearer ${token}`
+      }
+    }
+    try {
+      const response = await fetch(url, options)
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      if (response.status === 204) {
+        return null as T
+      }
+      return await response.json()
+    } catch (error) {
+      console.error('Fetch error:', error)
+      throw error
+    }
+  }
 }
+
+export { Request }
