@@ -1,56 +1,76 @@
 <script setup lang="ts">
-import { useFetchGet, useFetchPost } from '@/utils/fetch';
-import { onMounted, ref } from 'vue';
-import router from '@/router';
+import { onMounted, ref } from 'vue'
+import { Request } from '@/utils/fetch'
+import lojaSemFoto from '../assets/loja-sem-foto.png'
+import { useRouter } from 'vue-router'
 
 const data = ref([])
 const isNew = ref(false)
-const url = ref('http://localhost:3000/stores')
-const newStore = defineModel('newStore', { default: ""})
+const url = ref('http://localhost:3000')
+const newStore = defineModel('newStore', { default: '' })
+const image = ref<File | null>(null)
+const router = useRouter()
 
+interface responseCreate {
+  id: string
+}
+
+const request = new Request(url.value)
 const create = () => {
   isNew.value = true
 }
 
-const save = async () => {
-  const { id } = await useFetchPost(url.value, { store: { name: newStore.value }})
+const createImage = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  if (input.files && input.files.length > 0) {
+    image.value = input.files[0]
+  }
+}
 
+const save = async () => {
+  const { id } = (await request.uploadImage('/stores', {
+    name: newStore.value,
+    image: image.value
+  })) as responseCreate
   router.push(`/store/${id}`)
 }
 
 const start = ({ target: { id } }: any) => {
-  
   router.push(`/store/${id}`)
 }
 
 onMounted(async () => {
-  data.value = await useFetchGet(url.value)
+  data.value = await request.get('/stores')
 })
-
 </script>
 
 <template>
   <div>
-    <h1>Stores</h1> <br> <br>
-
-    <br> <br> <br>
+    <h1>Stores</h1>
+    <br />
+    <br />
 
     <button @click="create">Criar Loja</button>
     <div v-if="isNew">
       <label for="">Nome da Loja:</label>
-      <input v-model="newStore" type="text">
+      <input v-model="newStore" type="text" />
+      <input @change="createImage" type="file" />
       <button @click="save">Salvar</button>
     </div>
-     <br> <br> <br>
+    <br />
+    <br />
+    <br />
 
-    <h2><strong>Lojas:</strong></h2> <br>
+    <h2><strong>Lojas:</strong></h2>
+    <br />
+    <p>{{ data }}</p>
 
-    <div v-for="{ name, id } in data" :key="id">
-      <span>{{ name }}</span> <br>
-      <button @click="start" :id=id>Entrar</button>
-      <br><br>
-      <hr>
+    <div v-for="{ name, id, image_url } in data" :key="id">
+      <span>{{ name }}</span> <br />
+      <img :src="image_url ? url + image_url : lojaSemFoto" alt="image Loja" />
+      <button @click="start" :id="id">Entrar</button>
+      <br /><br />
+      <hr />
     </div>
-
-    </div>
+  </div>
 </template>
