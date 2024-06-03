@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { useFetchGet } from '@/utils/Functionsfetch'
 import { onMounted, ref } from 'vue'
-import router from '@/router'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { Request } from '@/utils/fetch'
 
 interface store {
   store_id: string
@@ -14,22 +13,30 @@ interface store {
 
 const data = ref<store[]>([])
 const route = useRoute()
+const router = useRouter()
+const request = new Request('http://localhost:3000')
 
 const edit = async ({ target: { id } }: any) => {
   router.push(`/products/${id}/store/${route.params.id}`)
 }
+
+// const deleteStore = async () => {
+//   await request.delete(`/stores/${route.params.id}`)
+//   router.back()
+// }
 
 const create = () => {
   router.push(`/products/create/${route.params.id}`)
 }
 
 onMounted(async () => {
-  data.value = await useFetchGet(`http://localhost:3000/store/${route.params.id}/products`)
+  data.value = await request.get(`/store/${route.params.id}/products`)
 })
 </script>
 
 <template>
   <div>
+    <button @click="router.push(`/store/${route.params.id}/edit`)">Editar Perfil da Loja</button>
     <h1>Produtos</h1>
     <button @click="create">Criar Produto</button>
     <div v-for="{ title, id, price, image } in data" :key="id">
