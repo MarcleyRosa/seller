@@ -9,19 +9,22 @@ class Request {
     const url = `${this.baseURL}${endpoint}`
 
     const token = localStorage.getItem('token') || sessionStorage.getItem('token')
+    const isBody = data && Object.keys(data).length > 0
 
-    const options: RequestInit = {
+    const options: any = {
       method,
       headers: {
         Accept: 'application/json',
-        'Content-Type': 'application/json',
         'X-API-KEY': 'D+PQFRWy9hb/RqN2bYZnHXUNIMY=',
         Authorization: `Bearer ${token}`
       }
     }
 
-    if (data) {
+    if (isBody) {
       options.body = JSON.stringify(data)
+      options.headers['Content-Type'] = 'application/json'
+    } else {
+      options.body = data
     }
 
     try {
@@ -57,72 +60,6 @@ class Request {
 
   public delete<T>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint, 'DELETE')
-  }
-
-  public async uploadImage<T>(endpoint: string, body: any): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`
-    const token: string | null = localStorage.getItem('token')
-    const formData = new FormData()
-
-    formData.append('store[name]', body.name)
-    formData.append('store[image]', body.image)
-
-    const options = {
-      method: 'POST',
-      body: formData,
-      headers: {
-        Accept: 'application/json',
-        // 'Content-Type': 'multipart/form-data',
-        'X-API-KEY': 'ZwtuEmALA8tBb9Dunb0uakD2s14=',
-        Authorization: `Bearer ${token}`
-      }
-    }
-    try {
-      const response = await fetch(url, options)
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      if (response.status === 204) {
-        return null as T
-      }
-      return await response.json()
-    } catch (error) {
-      console.error('Fetch error:', error)
-      throw error
-    }
-  }
-
-  public async updateImage<T>(endpoint: string, body: any): Promise<T> {
-    const url = `${this.baseURL}${endpoint}`
-    const token: string | null = localStorage.getItem('token')
-    const formData = new FormData()
-
-    formData.append('store[name]', body.name)
-    formData.append('store[image]', body.image)
-
-    const options = {
-      method: 'PATCH',
-      body: formData,
-      headers: {
-        Accept: 'application/json',
-        // 'Content-Type': 'multipart/form-data',
-        'X-API-KEY': 'ZwtuEmALA8tBb9Dunb0uakD2s14=',
-        Authorization: `Bearer ${token}`
-      }
-    }
-    try {
-      const response = await fetch(url, options)
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      if (response.status === 204) {
-        return null as T
-      }
-      return await response.json()
-    } catch (error) {
-      console.error('Fetch error:', error)
-      throw error
-    }
   }
 }
 
