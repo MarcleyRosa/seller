@@ -28,10 +28,11 @@ const createImage = (event: Event) => {
 }
 
 const save = async () => {
-  const { id } = (await request.uploadImage('/stores', {
-    name: newStore.value,
-    image: image.value
-  })) as responseCreate
+  const formData = new FormData()
+
+  formData.append('store[name]', newStore.value)
+  formData.append('store[image]', image.value as File)
+  const { id } = (await request.post('/stores', formData)) as responseCreate
   router.push(`/store/${id}`)
 }
 
