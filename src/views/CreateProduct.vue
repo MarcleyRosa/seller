@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import ProductNew from '@/components/ProductNew.vue'
-import { useFetchPost } from '@/utils/Functionsfetch'
 import { ref } from 'vue'
 
-const url = ref('http://localhost:3000/products')
+const path = ref('/products')
 </script>
 
 <template>
   <div>
-    <ProductNew :use-fetch="useFetchPost" :url="url" />
+    <ProductNew method="post" :path="path" />
   </div>
 </template>
