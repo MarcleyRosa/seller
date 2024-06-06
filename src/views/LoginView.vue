@@ -11,7 +11,6 @@ const signIn = async () => {
   const body = reactive({ login: { email, password } })
   const data = await useFetchPost(url.value, body)
 
-  console.log(data)
   localStorage.setItem('token', data.token)
   router.push('/stores')
 }
