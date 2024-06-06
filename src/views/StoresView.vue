@@ -64,11 +64,9 @@ onMounted(async () => {
 
     <h2><strong>Lojas:</strong></h2>
     <br />
-    <p>{{ data }}</p>
-
     <div v-for="{ name, id, image_url } in data" :key="id">
       <span>{{ name }}</span> <br />
-      <img :src="image_url ? url + image_url : lojaSemFoto" alt="image Loja" />
+      <img width="200px" :src="image_url ? url + image_url : lojaSemFoto" alt="image Loja" />
       <button @click="start" :id="id">Entrar</button>
       <br /><br />
       <hr />

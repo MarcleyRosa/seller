@@ -22,6 +22,12 @@ const edit = async ({ target: { id } }: any) => {
   router.push(`/products/${id}/store/${route.params.id}`)
 }
 
+const remove = async ({ target: { id } }: any) => {
+  console.log(id)
+
+  await request.delete(`/products/${id}`)
+}
+
 // const deleteStore = async () => {
 //   await request.delete(`/stores/${route.params.id}`)
 //   router.back()
@@ -54,6 +60,7 @@ onMounted(async () => {
       <br />
       <br />
       <button @click="edit" :id="id">Editar</button>
+      <button @click="remove" :id="id">Excluir</button>
       <br /><br />
       <hr />
     </div>
