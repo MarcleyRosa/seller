@@ -2,19 +2,21 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Request } from '@/utils/fetch'
+import produtoSemFoto from '../assets/produto-sem-foto.png'
 
 interface store {
   store_id: string
   id: string
   title: string
   price: string
-  image: string
+  image_url: string
 }
 
 const data = ref<store[]>([])
 const route = useRoute()
 const router = useRouter()
-const request = new Request('http://localhost:3000')
+const url = 'http://localhost:3000'
+const request = new Request(url)
 
 const edit = async ({ target: { id } }: any) => {
   router.push(`/products/${id}/store/${route.params.id}`)
@@ -39,12 +41,15 @@ onMounted(async () => {
     <button @click="router.push(`/store/${route.params.id}/edit`)">Editar Perfil da Loja</button>
     <h1>Produtos</h1>
     <button @click="create">Criar Produto</button>
-    <div v-for="{ title, id, price, image } in data" :key="id">
+    <div v-for="{ title, id, price, image_url } in data" :key="id">
       <span>{{ title }}</span> <br />
       <p>{{ price }}</p>
       <button>
-        <img v-if="image" width="100px" :src="image" alt="" />
-        <img v-else width="100px" src="../assets/produto-sem-foto.png" alt="" />
+        <img
+          style="width: 100px"
+          :src="image_url ? url + image_url : produtoSemFoto"
+          alt="image Loja"
+        />
       </button>
       <br />
       <br />
