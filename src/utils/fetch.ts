@@ -15,7 +15,7 @@ class Request {
       method,
       headers: {
         Accept: 'application/json',
-        'X-API-KEY': 'D+PQFRWy9hb/RqN2bYZnHXUNIMY=',
+        'X-API-KEY': import.meta.env.X_API_KEY,
         Authorization: `Bearer ${token}`
       }
     }

@@ -2,67 +2,47 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Request } from '@/utils/fetch'
-import produtoSemFoto from '../assets/produto-sem-foto.png'
+import { fetchEventSource } from '@microsoft/fetch-event-source'
+import OrderDetails from '@/components/OrderDetails.vue'
+import type { NewOrder, Store } from '../utils/interfaces'
+import { options } from '@/utils'
 
-interface store {
-  store_id: string
-  id: string
-  title: string
-  price: string
-  image_url: string
-}
-
-const data = ref<store[]>([])
+const data = ref<Store[]>([])
 const route = useRoute()
 const router = useRouter()
 const url = 'http://localhost:3000'
 const request = new Request(url)
-
-const edit = async ({ target: { id } }: any) => {
-  router.push(`/products/${id}/store/${route.params.id}`)
-}
-
-const remove = async ({ target: { id } }: any) => {
-  console.log(id)
-
-  await request.delete(`/products/${id}`)
-}
-
-// const deleteStore = async () => {
-//   await request.delete(`/stores/${route.params.id}`)
-//   router.back()
-// }
-
-const create = () => {
-  router.push(`/products/create/${route.params.id}`)
-}
+const newOrder = ref<NewOrder>({ time: new Date(), order: [] })
 
 onMounted(async () => {
   data.value = await request.get(`/store/${route.params.id}/products`)
+
+  await fetchEventSource(`${url}/stores/${route.params.id}/orders/new`, {
+    ...options,
+    async onopen(response) {
+      if (response.ok) {
+        console.log('connect')
+        return
+      }
+    },
+    onmessage(msg) {
+      if (msg.event === 'new-order') {
+        const data = JSON.parse(msg.data)
+        newOrder.value = data
+      }
+    }
+  })
 })
 </script>
 
 <template>
   <div>
+    <h2>Pedidos</h2>
     <button @click="router.push(`/store/${route.params.id}/edit`)">Editar Perfil da Loja</button>
-    <h1>Produtos</h1>
-    <button @click="create">Criar Produto</button>
-    <div v-for="{ title, id, price, image_url } in data" :key="id">
-      <span>{{ title }}</span> <br />
-      <p>{{ price }}</p>
-      <button>
-        <img
-          style="width: 100px"
-          :src="image_url ? url + image_url : produtoSemFoto"
-          alt="image Loja"
-        />
-      </button>
-      <br />
-      <br />
-      <button @click="edit" :id="id">Editar</button>
-      <button @click="remove" :id="id">Excluir</button>
-      <br /><br />
-      <hr />
+    <button @click="router.push(`/store/${route.params.id}/products`)">Ver meus Produtos</button>
+    <p>{{ `Pedidos ${newOrder?.time}` }}</p>
+    <div v-for="order in newOrder?.order" :key="order.id">
+      <OrderDetails :order="order" />
     </div>
   </div>
 </template>
