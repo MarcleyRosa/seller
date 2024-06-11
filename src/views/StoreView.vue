@@ -6,6 +6,7 @@ import { fetchEventSource } from '@microsoft/fetch-event-source'
 import OrderDetails from '@/components/OrderDetails.vue'
 import type { NewOrder, Store } from '../utils/interfaces'
 import { options } from '@/utils'
+import { formatDate } from '../utils'
 
 const data = ref<Store[]>([])
 const route = useRoute()
@@ -40,9 +41,12 @@ onMounted(async () => {
     <h2>Pedidos</h2>
     <button @click="router.push(`/store/${route.params.id}/edit`)">Editar Perfil da Loja</button>
     <button @click="router.push(`/store/${route.params.id}/products`)">Ver meus Produtos</button>
-    <p>{{ `Pedidos ${newOrder?.time}` }}</p>
+    <button @click="router.push(`/store/${route.params.id}/orders`)">Pedidos</button>
+    <p>{{ `Pedidos ${formatDate(newOrder.time)}` }}</p>
     <div v-for="order in newOrder?.order" :key="order.id">
-      <OrderDetails :order="order" />
+      <button @click="router.push(`/order/${order.id}`)">
+        <OrderDetails :order="order" />
+      </button>
     </div>
   </div>
 </template>
