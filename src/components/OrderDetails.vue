@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatDate } from '@/utils'
+
 interface Order {
   id: string
   created_at: string
@@ -11,7 +13,7 @@ defineProps<{
   <div>
     <div>
       <span>{{ order.id }}</span> <br />
-      <p>{{ order.created_at }}</p>
+      <p>{{ formatDate(order.created_at) }}</p>
       <br />
       <br />
       <button>Aceitar</button>
