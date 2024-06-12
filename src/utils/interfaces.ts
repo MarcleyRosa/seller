@@ -11,5 +11,6 @@ export interface NewOrder {
   order: {
     id: string
     created_at: string
+    state: string
   }[]
 }
