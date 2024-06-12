@@ -44,9 +44,17 @@ onMounted(async () => {
     <button @click="router.push(`/store/${route.params.id}/orders`)">Pedidos</button>
     <p>{{ `Pedidos ${formatDate(newOrder.time)}` }}</p>
     <div v-for="order in newOrder?.order" :key="order.id">
-      <button @click="router.push(`/order/${order.id}`)">
+      <button id="order" @click="router.push(`/order/${order.id}`)">
         <OrderDetails :order="order" />
+        <p v-if="order.state === 'created'" style="color: red">Processando pagamento...</p>
+        <p v-else style="color: green">Pagamento efetuado!</p>
       </button>
     </div>
   </div>
 </template>
+
+<style scoped>
+#order {
+  width: 250px;
+}
+</style>

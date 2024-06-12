@@ -15,10 +15,6 @@ defineProps<{
       <span>{{ order.id }}</span> <br />
       <p>{{ formatDate(order.created_at) }}</p>
       <br />
-      <br />
-      <button>Aceitar</button>
-      <button>Recusar</button>
-      <br /><br />
       <hr />
     </div>
   </div>
