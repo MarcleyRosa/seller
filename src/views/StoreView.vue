@@ -16,7 +16,8 @@ const data = ref<Store>({
   id: '',
   title: '',
   price: '',
-  image_url: ''
+  image_url: '',
+  stock: 0
 })
 const route = useRoute()
 const router = useRouter()
