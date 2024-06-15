@@ -1,6 +1,7 @@
 export interface Store {
   name: string
   store_id: string
+  stock: number
   id: string
   title: string
   price: string
@@ -15,4 +16,11 @@ export interface NewOrder {
     created_at: string
     state: string
   }[]
+}
+
+export interface Product {
+  title: string
+  price: string
+  stock: number
+  image_url: string
 }

@@ -20,3 +20,11 @@ export function formatDate(value: any) {
   const seconds = String(date.getSeconds()).padStart(2, '0')
   return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
 }
+
+export function formatCurrency(value: number) {
+  if (!value) return ''
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value)
+}
