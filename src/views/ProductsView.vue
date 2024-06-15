@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { Request } from '@/utils/fetch'
 import produtoSemFoto from '../assets/produto-sem-foto.png'
 import type { Store } from '@/utils/interfaces'
+import { formatCurrency } from '../utils'
 
 const data = ref<Store[]>([])
 const route = useRoute()
@@ -32,9 +33,10 @@ onMounted(async () => {
   <div>
     <h1>Produtos</h1>
     <button @click="create">Criar Produto</button>
-    <div v-for="{ title, id, price, image_url } in data" :key="id">
+    <div v-for="{ title, id, price, image_url, stock } in data" :key="id">
       <span>{{ title }}</span> <br />
-      <p>{{ price }}</p>
+      <p v-if="stock === 0" style="color: red">Estoque esgotado!</p>
+      <p>{{ formatCurrency(+price) }}</p>
       <button>
         <img
           style="width: 100px"
