@@ -1,28 +1,11 @@
 <script setup lang="ts">
-import WelcomeItem from './WelcomeItem.vue'
-import DocumentationIcon from './icons/IconDocumentation.vue'
-import ToolingIcon from './icons/IconTooling.vue'
-import SupportIcon from './icons/IconSupport.vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 </script>
 
 <template>
-  <WelcomeItem>
-    <template #icon>
-      <DocumentationIcon />
-    </template>
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <ToolingIcon />
-    </template>
-    <p>Test</p>
-  </WelcomeItem>
-
-
-  <WelcomeItem>
-    <template #icon>
-      <SupportIcon />
-    </template>
-  </WelcomeItem>
+  <div>
+    <button @click="router.push('/signin')">Entrar</button>
+  </div>
 </template>
