@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 // import { RouterLink } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 const logout = () => {
   localStorage.removeItem('token')
@@ -15,15 +16,15 @@ const logout = () => {
     <img alt="Vue logo" class="logo" src="@/assets/18157271.jpg" />
     <nav>
       <!-- Adicione seus links de navegação aqui -->
-      <!-- <RouterLink to="/">Home</RouterLink> -->
       <a href="/">Home</a>
-      <a href="/about">About</a>
+      <a v-if="route.path === '/'" href="/sigin">Entrar</a>
     </nav>
     <button @click="logout">Logout</button>
   </div>
 </template>
 
 <style scoped>
+/* Estilização do NavBar fixo no topo */
 .navbar {
   position: fixed;
   top: 0;
@@ -76,7 +77,26 @@ const logout = () => {
 }
 
 /* Ajuste do espaçamento do conteúdo principal */
-main {
-  margin-top: 80px; /* Espaço suficiente para o NavBar fixo */
+.main-content {
+  padding-top: calc(80px + 20px);
+}
+
+/* Estilos responsivos */
+@media (max-width: 1024px) {
+  .main-content {
+    padding-top: calc(100px + 20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: calc(120px + 20px); /* Ajuste conforme necessário */
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding-top: calc(140px + 20px); /* Ajuste conforme necessário */
+  }
 }
 </style>

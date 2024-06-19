@@ -4,6 +4,7 @@ import { onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { formatCurrency } from '../utils/index'
 import type { Product } from '../utils/interfaces'
+import noImage from '../assets/produto-sem-foto.png'
 
 const props = defineProps<{
   method: 'post' | 'patch'
@@ -25,7 +26,7 @@ const image = ref<File | null>(null)
 const url = 'http://localhost:3000'
 const route = useRoute()
 const request = new Request(url)
-const data = ref<Product>({} as Product)
+const data = ref<Product>({ title: '', price: '', stock: 0 } as Product)
 
 onMounted(async () => {
   data.value = await request.get(`/products/${route.params.id}`)
@@ -51,24 +52,77 @@ const save = async () => {
 </script>
 
 <template>
-  <p>{{ `Titulo: ${data.title}` }}</p>
-  <p>{{ `Preço: ${formatCurrency(+data.price)}` }}</p>
-  <p>{{ `Estoque: ${data.stock}` }}</p>
-  <img :src="url + data.image_url" alt="" />
-  <div>
-    <label for="">Titulo</label> <br />
-    <input v-model="title" type="text" /> <br />
-    <br />
-    <label for="">Preço</label> <br />
-    <input v-model="price" type="text" /> <br />
-    <br />
-    <label for="">Estoque</label> <br />
-    <input v-model="stock" type="number" /> <br />
-    <br />
-    <label for="">Imagem</label> <br />
-    <input @change="createImage" type="file" /> <br />
-    <br />
+  <div class="edit-product">
+    <p>{{ `Título: ${data.title}` }}</p>
+    <p>{{ `Preço: ${formatCurrency(+data.price)}` }}</p>
+    <p>{{ `Estoque: ${data.stock}` }}</p>
+    <img :src="data.image_url ? url + data.image_url : noImage" alt="" class="product-image" />
+    <div class="form-container">
+      <label for="editTitle">Título</label>
+      <input id="editTitle" v-model="title" type="text" class="form-input" />
 
-    <button @click="save">Salvar</button>
+      <label for="editPrice">Preço</label>
+      <input id="editPrice" v-model="price" type="text" class="form-input" />
+
+      <label for="editStock">Estoque</label>
+      <input id="editStock" v-model="stock" type="number" class="form-input" />
+
+      <label for="editImage">Imagem</label>
+      <input id="editImage" @change="createImage" type="file" class="form-input" />
+
+      <button @click="save" class="save-button">Salvar</button>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.edit-product {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 100px;
+  box-sizing: border-box;
+  background-color: #f8f9fa; /* Cor de fundo cinza claro */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.product-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.form-container {
+  margin-top: 20px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #007bff; /* Azul ao focar */
+}
+
+.save-button {
+  padding: 10px 20px;
+  background-color: #007bff; /* Azul */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.save-button:hover {
+  background-color: #0056b3; /* Azul mais escuro */
+}
+</style>
