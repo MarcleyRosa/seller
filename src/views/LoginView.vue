@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { useFetchPost } from '@/utils/Functionsfetch'
-import { reactive, ref } from 'vue'
-import router from '@/router'
+import { Request } from '@/utils/fetch'
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
 
-const url = ref('http://localhost:3000/sign_in')
+// const url = ref('http://localhost:3000/sign_in')
 const email = defineModel('email', { default: '' })
 const password = defineModel('password', { default: '' })
+const router = useRouter()
+const url = 'http://localhost:3000'
+const request = new Request(url)
 
 const signIn = async () => {
   const body = reactive({ login: { email, password } })
-  const data = await useFetchPost(url.value, body)
+  const data = (await request.post('/sign_in', body)) as any
 
   localStorage.setItem('token', data.token)
   router.push('/stores')
@@ -29,16 +32,17 @@ const signIn = async () => {
     </form>
   </div>
 </template>
+
 <style scoped>
 /* Estilização do container principal */
 .login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Mudança para alinhar ao topo */
   height: 100vh;
   background-color: #f0f2f5;
-  padding: 20px;
+  padding: 20px 10px; /* Aumentado o padding superior */
 }
 
 /* Estilização do texto do email */
@@ -46,6 +50,7 @@ const signIn = async () => {
   font-size: 18px;
   color: #333;
   margin-bottom: 20px;
+  margin-top: 40px; /* Espaço superior para afastar do topo */
 }
 
 /* Estilização do formulário */
@@ -102,31 +107,5 @@ const signIn = async () => {
 
 .login-container form button:not([type='submit']):hover {
   background-color: #5a6268;
-}
-
-@media (min-width: 1024px) {
-  .login-container {
-    padding-top: calc(100px + 20px);
-    width: 1000px;
-  }
-}
-
-@media (min-width: 1100px) {
-  .login-container {
-    padding-top: calc(100px + 20px);
-    width: 1220px;
-  }
-}
-
-@media (max-width: 768px) {
-  .login-container {
-    padding-top: calc(120px + 20px); /* Ajuste conforme necessário */
-  }
-}
-
-@media (max-width: 480px) {
-  .login-container {
-    padding-top: calc(140px + 20px); /* Ajuste conforme necessário */
-  }
 }
 </style>

@@ -12,91 +12,86 @@ const logout = () => {
 </script>
 
 <template>
-  <div class="navbar">
-    <img alt="Vue logo" class="logo" src="@/assets/18157271.jpg" />
-    <nav>
-      <!-- Adicione seus links de navegação aqui -->
-      <a href="/">Home</a>
-      <a v-if="route.path === '/'" href="/sigin">Entrar</a>
-    </nav>
-    <button @click="logout">Logout</button>
+  <div>
+    <div v-if="route.path !== '/' && route.path !== '/signin'" class="navbar-container">
+      <img alt="Vue logo" class="logo" src="@/assets/18157271.jpg" />
+      <nav class="navbar">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/signin" class="nav-link">Entrar</a>
+      </nav>
+      <button @click="logout" class="logout-button">Logout</button>
+    </div>
   </div>
 </template>
 
 <style scoped>
-/* Estilização do NavBar fixo no topo */
-.navbar {
+/* Estilo para o body para remover margens padrão */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif; /* Exemplo de fonte */
+}
+
+/* Estilo para o navbar-container */
+.navbar-container {
+  background-color: #2c3e50;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #f8f9fa;
-  padding: 10px 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  right: 0;
+  z-index: 1000; /* Garante que fique acima do conteúdo */
 }
 
-/* Estilização dos itens dentro do NavBar */
-.navbar .logo {
+/* Estilo para o logo */
+.logo {
   width: 50px;
   height: 50px;
-  object-fit: cover;
+  margin-right: 20px;
 }
 
-.navbar nav {
+/* Estilo para a navbar */
+.navbar {
   display: flex;
   gap: 20px;
+  flex-grow: 1;
 }
 
-.navbar nav a {
+/* Estilo para os links da navbar */
+.nav-link {
+  color: white;
   text-decoration: none;
-  color: #333;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
+  transition: color 0.3s;
 }
 
-.navbar nav a:hover {
-  color: #007bff;
+.nav-link:hover {
+  color: #1abc9c;
 }
 
-.navbar button {
-  background-color: #dc3545;
-  color: #fff;
+/* Estilo para o botão de logout */
+.logout-button {
+  background-color: #e74c3c;
+  color: white;
   border: none;
   padding: 10px 20px;
-  border-radius: 5px;
   font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s;
+  margin-left: 20px;
 }
 
-.navbar button:hover {
-  background-color: #c82333;
+.logout-button:hover {
+  background-color: #c0392b;
 }
 
-/* Ajuste do espaçamento do conteúdo principal */
 .main-content {
-  padding-top: calc(80px + 20px);
-}
-
-/* Estilos responsivos */
-@media (max-width: 1024px) {
-  .main-content {
-    padding-top: calc(100px + 20px);
-  }
-}
-
-@media (max-width: 768px) {
-  .main-content {
-    padding-top: calc(120px + 20px); /* Ajuste conforme necessário */
-  }
-}
-
-@media (max-width: 480px) {
-  .main-content {
-    padding-top: calc(140px + 20px); /* Ajuste conforme necessário */
-  }
+  margin-top: 60px;
+  padding: 20px;
 }
 </style>

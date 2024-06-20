@@ -50,6 +50,7 @@ onMounted(async () => {
       <button @click="changeState" class="action-button">Regerenciar pagamento do pedido</button>
     </div>
     <button v-else @click="changeState" class="state-button">{{ messageState[data.state] }}</button>
+    <button v-if="data.state === 'paid'" class="reject-button">Rejeitar</button>
     <div v-for="item in data?.order_items" :key="item.id" class="order-item">
       <p class="product-title">{{ item.product.title }}</p>
       <img :src="url + item.product.image_url" alt="Imagem do Produto" class="product-image" />
@@ -67,7 +68,7 @@ onMounted(async () => {
   margin: 0 auto;
   padding: 20px;
   box-sizing: border-box;
-  text-align: center; /* Centraliza o conteúdo */
+  text-align: center;
 }
 
 h1 {
@@ -100,7 +101,7 @@ h1 {
 
 .state-button {
   padding: 15px 30px;
-  background-color: #28a745; /* Verde para Pagamento Concluído */
+  background-color: #28a745;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -144,6 +145,22 @@ h1 {
   margin-bottom: 10px;
 }
 
+.reject-button {
+  background-color: #ef4444;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  width: 50%;
+  height: 45px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.reject-button:hover {
+  background-color: #dc2626;
+}
 @media (max-width: 768px) {
   .order-item {
     padding: 15px;

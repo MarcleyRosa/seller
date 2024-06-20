@@ -17,7 +17,7 @@ interface responseCreate {
 
 const request = new Request(url.value)
 const create = () => {
-  isNew.value = true
+  isNew.value = !isNew.value
 }
 
 const createImage = (event: Event) => {

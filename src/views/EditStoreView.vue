@@ -27,14 +27,62 @@ const save = async () => {
 }
 </script>
 <template>
-  <div>
+  <div class="container">
     <h1>Editar Loja</h1>
 
-    <label for="">Nome da Loja</label>
-    <input v-model="name" type="text" />
-    <label for="">Foto</label>
-    <input @change="createImage" type="file" name="" id="" />
+    <label for="name">Nome da Loja</label>
+    <input v-model="name" type="text" id="name" />
 
-    <button @click="save">Salvar</button>
+    <label for="photo">Foto</label>
+    <input @change="createImage" type="file" id="photo" name="photo" />
+
+    <button @click="save" class="save-button">Salvar</button>
   </div>
 </template>
+
+<style scoped>
+/* Estilo para o contêiner do formulário */
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Estilo para o título */
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Estilo para as labels */
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+/* Estilo para os inputs */
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Estilo para o botão de salvar */
+.save-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+}
+</style>

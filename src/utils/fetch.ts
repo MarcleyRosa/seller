@@ -11,6 +11,8 @@ class Request {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token')
     const isBody = data && Object.keys(data).length > 0
 
+    console.log(token)
+
     const options: any = {
       method,
       headers: {
