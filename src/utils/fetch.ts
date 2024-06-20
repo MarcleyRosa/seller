@@ -11,11 +11,13 @@ class Request {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token')
     const isBody = data && Object.keys(data).length > 0
 
+    console.log(token)
+
     const options: any = {
       method,
       headers: {
         Accept: 'application/json',
-        'X-API-KEY': import.meta.env.X_API_KEY,
+        'X-API-KEY': import.meta.env.VITE_X_API_KEY,
         Authorization: `Bearer ${token}`
       }
     }

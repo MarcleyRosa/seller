@@ -43,28 +43,136 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <h1>Pedidos</h1>
-  <div v-if="data.state === 'created'">
-    <p style="color: red">Pagamento não confirmado!</p>
-    <button @click="changeState">Regenciar pagamento do pedido</button>
-  </div>
-  <button class="btt" v-else @click="changeState">{{ messageState[data.state] }}</button>
-  <div
-    v-for="{ id, amount, created_at, price, product: { title, image_url } } in data?.order_items"
-    :key="id"
-  >
-    <p>{{ title }}</p>
-    <img height="150px" width="150px" :src="url + image_url" alt="image product" />
-    <p>{{ `Quantidade: ${amount}` }}</p>
-    <p>{{ formatDate(created_at) }}</p>
-    <p>{{ `Valor: ${price}` }}</p>
-    <hr />
+  <div class="order-details">
+    <h1>Pedidos</h1>
+    <div v-if="data.state === 'created'" class="payment-not-confirmed">
+      <p class="status-message">Pagamento não confirmado!</p>
+      <button @click="changeState" class="action-button">Regerenciar pagamento do pedido</button>
+    </div>
+    <button v-else @click="changeState" class="state-button">{{ messageState[data.state] }}</button>
+    <button v-if="data.state === 'paid'" class="reject-button">Rejeitar</button>
+    <div v-for="item in data?.order_items" :key="item.id" class="order-item">
+      <p class="product-title">{{ item.product.title }}</p>
+      <img :src="url + item.product.image_url" alt="Imagem do Produto" class="product-image" />
+      <p>{{ `Quantidade: ${item.amount}` }}</p>
+      <p>{{ formatDate(item.created_at) }}</p>
+      <p>{{ `Valor: ${item.price}` }}</p>
+      <hr class="divider" />
+    </div>
   </div>
 </template>
 
 <style scoped>
-.btt {
-  width: 350px;
-  height: 30px;
+.order-details {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.payment-not-confirmed {
+  margin-bottom: 20px;
+}
+
+.status-message {
+  color: red;
+  font-weight: bold;
+}
+
+.action-button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+
+.state-button {
+  padding: 15px 30px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 50%;
+}
+
+.state-button:hover {
+  background-color: #218838;
+}
+
+.order-item {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.product-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.product-image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.divider {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.reject-button {
+  background-color: #ef4444;
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  width: 50%;
+  height: 45px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.reject-button:hover {
+  background-color: #dc2626;
+}
+@media (max-width: 768px) {
+  .order-item {
+    padding: 15px;
+  }
+
+  .product-title {
+    font-size: 16px;
+  }
+
+  .product-image {
+    width: 120px;
+    height: 120px;
+  }
 }
 </style>
