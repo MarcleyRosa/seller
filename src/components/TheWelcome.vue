@@ -13,13 +13,12 @@ const router = useRouter()
 </template>
 
 <style scoped>
-/* Estilização para o botão de login */
 .btn-login {
   position: absolute;
   top: 20px;
   right: 20px;
-  background-color: #2d3748; /* Cor de fundo do botão */
-  color: #ffffff; /* Cor do texto */
+  background-color: #2d3748;
+  color: #ffffff;
   font-size: 16px;
   font-weight: bold;
   padding: 12px 24px;
@@ -30,38 +29,35 @@ const router = useRouter()
     background-color 0.3s,
     transform 0.2s;
   text-transform: uppercase;
-  z-index: 10; /* Para ficar acima da imagem de fundo */
+  z-index: 10;
 }
 
 .btn-login:hover {
-  background-color: #1a202c; /* Cor de fundo do botão ao passar o mouse */
-  transform: scale(1.05); /* Efeito de escala ao passar o mouse */
+  background-color: #1a202c;
+  transform: scale(1.05);
 }
 
 .btn-login:focus {
-  outline: none; /* Remove o contorno ao focar */
+  outline: none;
 }
 
-/* Estilização para a imagem de plano de fundo */
 .bg-img {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Para garantir que a imagem cubra toda a tela */
-  z-index: -1; /* Para ficar atrás do conteúdo */
+  object-fit: cover;
+  z-index: -1;
 }
-
-/* Ajustes adicionais */
 .flex {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative; /* Para que os elementos filhos possam ser posicionados relativamente */
+  position: relative;
 }
 
 .h-screen {
-  height: 100vh; /* Altura total da tela */
+  height: 100vh;
 }
 </style>

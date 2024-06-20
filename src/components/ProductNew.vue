@@ -81,7 +81,7 @@ const save = async () => {
   margin: 0 auto;
   padding: 100px;
   box-sizing: border-box;
-  background-color: #f8f9fa; /* Cor de fundo cinza claro */
+  background-color: #f8f9fa;
   border: 1px solid #ccc;
   border-radius: 8px;
 }
@@ -109,12 +109,12 @@ const save = async () => {
 
 .form-input:focus {
   outline: none;
-  border-color: #007bff; /* Azul ao focar */
+  border-color: #007bff;
 }
 
 .save-button {
   padding: 10px 20px;
-  background-color: #007bff; /* Azul */
+  background-color: #007bff;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -123,6 +123,6 @@ const save = async () => {
 }
 
 .save-button:hover {
-  background-color: #0056b3; /* Azul mais escuro */
+  background-color: #0056b3;
 }
 </style>
