@@ -25,13 +25,11 @@ const logout = () => {
 </template>
 
 <style scoped>
-/* Estilo para o body para remover margens padrão */
 body {
   margin: 0;
-  font-family: Arial, sans-serif; /* Exemplo de fonte */
+  font-family: Arial, sans-serif;
 }
 
-/* Estilo para o navbar-container */
 .navbar-container {
   background-color: #2c3e50;
   color: white;
@@ -42,24 +40,21 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000; /* Garante que fique acima do conteúdo */
+  z-index: 1000;
 }
 
-/* Estilo para o logo */
 .logo {
   width: 50px;
   height: 50px;
   margin-right: 20px;
 }
 
-/* Estilo para a navbar */
 .navbar {
   display: flex;
   gap: 20px;
   flex-grow: 1;
 }
 
-/* Estilo para os links da navbar */
 .nav-link {
   color: white;
   text-decoration: none;
@@ -72,7 +67,6 @@ body {
   color: #1abc9c;
 }
 
-/* Estilo para o botão de logout */
 .logout-button {
   background-color: #e74c3c;
   color: white;
