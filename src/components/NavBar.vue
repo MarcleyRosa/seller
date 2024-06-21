@@ -13,7 +13,10 @@ const logout = () => {
 
 <template>
   <div>
-    <div v-if="route.path !== '/' && route.path !== '/signin'" class="navbar-container">
+    <div
+      v-if="route.path !== '/' && route.path !== '/signin' && route.path !== '/signup'"
+      class="navbar-container"
+    >
       <img alt="Vue logo" class="logo" src="@/assets/18157271.jpg" />
       <nav class="navbar">
         <a href="/" class="nav-link">Home</a>
