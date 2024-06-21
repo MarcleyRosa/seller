@@ -3,7 +3,6 @@ import { Request } from '@/utils/fetch'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
-// const url = ref('http://localhost:3000/sign_in')
 const email = defineModel('email', { default: '' })
 const password = defineModel('password', { default: '' })
 const router = useRouter()
@@ -12,7 +11,7 @@ const request = new Request(url)
 
 const signIn = async () => {
   const body = reactive({ login: { email, password } })
-  const data = (await request.post('/sign_in', body)) as any
+  const data = (await request.post('/sign_in', body)) as { token: string }
 
   localStorage.setItem('token', data.token)
   router.push('/stores')
@@ -27,33 +26,30 @@ const signIn = async () => {
       <input id="email" v-model="email" type="text" />
       <label for="password">Senha:</label>
       <input id="password" v-model="password" type="password" />
-      <button type="button">Criar conta</button>
+      <button @click="router.push('/signup')" type="button">Criar conta</button>
       <button type="submit">Entrar</button>
     </form>
   </div>
 </template>
 
 <style scoped>
-/* Estilização do container principal */
 .login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Mudança para alinhar ao topo */
+  justify-content: flex-start;
   height: 100vh;
   background-color: #f0f2f5;
-  padding: 20px 10px; /* Aumentado o padding superior */
+  padding: 20px 10px;
 }
 
-/* Estilização do texto do email */
 .login-container p {
   font-size: 18px;
   color: #333;
   margin-bottom: 20px;
-  margin-top: 40px; /* Espaço superior para afastar do topo */
+  margin-top: 40px;
 }
 
-/* Estilização do formulário */
 .login-container form {
   display: flex;
   flex-direction: column;
@@ -64,14 +60,12 @@ const signIn = async () => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilização dos labels */
 .login-container form label {
   margin-bottom: 5px;
   font-size: 14px;
   color: #333;
 }
 
-/* Estilização dos inputs */
 .login-container form input {
   margin-bottom: 15px;
   padding: 10px;
@@ -80,7 +74,6 @@ const signIn = async () => {
   font-size: 16px;
 }
 
-/* Estilização dos botões */
 .login-container form button {
   padding: 10px;
   border: none;
