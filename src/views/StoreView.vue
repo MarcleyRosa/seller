@@ -8,6 +8,7 @@ import type { NewOrder, Store } from '../utils/interfaces'
 import { options } from '@/utils'
 import { formatDate } from '../utils'
 import noImageStore from '../assets/loja-sem-foto.png'
+import Swal from 'sweetalert2'
 
 const data = ref<Store>({
   active: false,
@@ -27,6 +28,27 @@ const newOrder = ref<NewOrder>({ time: new Date(), order: [] })
 
 const activeStore = async () => {
   data.value = await request.patch(`/stores/${route.params.id}`, { active: !data.value.active })
+}
+
+function confirmAction() {
+  Swal.fire({
+    title: 'Você tem certeza?',
+    text: 'Você não poderá reverter isso!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sim, prosseguir!',
+    cancelButtonText: 'Cancelar'
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      await request.delete(`/stores/${route.params.id}`)
+      console.log('Ação confirmada!')
+      Swal.fire('Confirmado!', 'Sua ação foi confirmada.', 'success')
+    } else {
+      console.log('Ação cancelada!')
+    }
+  })
 }
 
 onMounted(async () => {
@@ -68,6 +90,7 @@ onMounted(async () => {
       <button @click="router.push(`/store/${route.params.id}/orders`)" class="action-button">
         Pedidos
       </button>
+      <button @click="confirmAction">Excluir Loja</button>
       <button :id="data.active ? 'open' : 'close'" @click="activeStore" class="action-button">
         {{ data.active ? 'Fechar Loja' : 'Abrir Loja' }}
       </button>
