@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Request } from '@/utils/fetch'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const email = defineModel('email', { default: '' })
@@ -8,13 +8,19 @@ const password = defineModel('password', { default: '' })
 const router = useRouter()
 const url = 'http://localhost:3000'
 const request = new Request(url)
+const message = ref('')
 
 const signIn = async () => {
-  const body = reactive({ login: { email, password } })
-  const data = (await request.post('/sign_in', body)) as { token: string }
+  try {
+    const body = reactive({ login: { email, password } })
+    const data = (await request.post('/sign_in', body)) as { token: string }
 
-  localStorage.setItem('token', data.token)
-  router.push('/stores')
+    localStorage.setItem('token', data.token)
+    router.push('/stores')
+  } catch (error) {
+    console.log(error)
+    message.value = 'usuário ou senha inválido'
+  }
 }
 </script>
 
@@ -26,6 +32,7 @@ const signIn = async () => {
       <input id="email" v-model="email" type="text" />
       <label for="password">Senha:</label>
       <input id="password" v-model="password" type="password" />
+      <p style="color: red" v-if="message">{{ message }}</p>
       <button @click="router.push('/signup')" type="button">Criar conta</button>
       <button type="submit">Entrar</button>
     </form>

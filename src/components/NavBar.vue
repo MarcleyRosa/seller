@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
-// import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
+import { PhUserCircle, PhSignOut } from '@phosphor-icons/vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -17,12 +17,22 @@ const logout = () => {
       v-if="route.path !== '/' && route.path !== '/signin' && route.path !== '/signup'"
       class="navbar-container"
     >
-      <img alt="Vue logo" class="logo" src="@/assets/18157271.jpg" />
+      <!-- <button class="logo" @click="router.push('/stores')">
+      </button> -->
+      <RouterLink :to="{ name: 'stores' }">
+        <img alt="Vue logo" class="logo" src="@/assets/18157271.jpg" />
+      </RouterLink>
       <nav class="navbar">
         <a href="/" class="nav-link">Home</a>
         <a href="/signin" class="nav-link">Entrar</a>
       </nav>
-      <button @click="logout" class="logout-button">Logout</button>
+      <RouterLink style="color: white" :to="{ name: 'profile' }">
+        <PhUserCircle :size="32" weight="fill" />
+      </RouterLink>
+
+      <button @click="logout" class="logout-button">
+        <PhSignOut :size="20" weight="fill" />
+      </button>
     </div>
   </div>
 </template>
