@@ -5,6 +5,7 @@ import { Request } from '@/utils/fetch'
 import produtoSemFoto from '../assets/produto-sem-foto.png'
 import type { Store } from '@/utils/interfaces'
 import { formatCurrency } from '../utils'
+import Swal from 'sweetalert2'
 
 const data = ref<Store[]>([])
 const route = useRoute()
@@ -17,7 +18,24 @@ const edit = async (id: string) => {
 }
 
 const remove = async (id: string) => {
-  await request.delete(`/products/${id}`)
+  Swal.fire({
+    title: 'Você tem certeza?',
+    text: 'Você não poderá reverter isso!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sim, prosseguir!',
+    cancelButtonText: 'Cancelar'
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      await request.delete(`/products/${id}`)
+      console.log('Ação confirmada!')
+      Swal.fire('Confirmado!', 'Sua ação foi confirmada.', 'success')
+    } else {
+      console.log('Ação cancelada!')
+    }
+  })
 }
 
 const create = () => {
