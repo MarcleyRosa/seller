@@ -40,22 +40,74 @@ function confirmAction() {
 </script>
 
 <template>
-  <div>
-    <br />
-    <br />
-    <br /><br /><br />
-    <p>Profile</p>
-    <button @click="confirmAction">Excluir Perfil</button>
-    <p>{{ data.email }}</p>
-    <p>{{ `Conta criada em: ${formatDate(data.created_at)}` }}</p>
-    <div v-if="data.address">
-      Endereço:
-      <p>
+  <div class="profile-container">
+    <p class="profile-title">Profile</p>
+    <button @click="confirmAction" class="delete-button">Excluir Perfil</button>
+    <p class="email">{{ data.email }}</p>
+    <p class="created-at">{{ `Conta criada em: ${formatDate(data.created_at)}` }}</p>
+    <div v-if="data.address" class="address">
+      <p class="address-title">Endereço:</p>
+      <p class="address-details">
         {{
           `${data.address.street} N° ${data.address.house_number}, ${data.address.neighborhood} - ${data.address.city}-${data.address.state}`
         }}
       </p>
-      <p>{{ `CEP: ${data.address.zip_code}` }}</p>
+      <p class="zip-code">{{ `CEP: ${data.address.zip_code}` }}</p>
     </div>
   </div>
 </template>
+
+<style scoped>
+.profile-container {
+  padding: 100px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+}
+
+.profile-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.delete-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+  background-color: #c0392b;
+}
+
+.email,
+.created-at,
+.zip-code {
+  font-size: 16px;
+  margin: 5px 0;
+}
+
+.address {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.address-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.address-details {
+  margin-bottom: 5px;
+}
+</style>
