@@ -24,3 +24,24 @@ export interface Product {
   stock: number
   image_url: string
 }
+
+export interface User {
+  id: number
+  email: string
+  created_at: string
+  updated_at: string
+  role: string
+  address: {
+    id: number
+    street: string
+    house_number: string
+    neighborhood: string
+    city: string
+    state: string
+    zip_code: string
+    country: string
+    user_id: number
+    created_at: string
+    updated_at: string
+  }
+}

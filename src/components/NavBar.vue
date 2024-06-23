@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from 'vue-router'
-// import { RouterLink } from 'vue-router'
+import { PhUserCircle } from '@phosphor-icons/vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -22,6 +22,10 @@ const logout = () => {
         <a href="/" class="nav-link">Home</a>
         <a href="/signin" class="nav-link">Entrar</a>
       </nav>
+      <button style="background-color: #2c3e50" @click="router.push('/profile')">
+        <PhUserCircle :size="32" weight="fill" />
+      </button>
+
       <button @click="logout" class="logout-button">Logout</button>
     </div>
   </div>
