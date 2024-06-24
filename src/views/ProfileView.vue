@@ -13,7 +13,6 @@ const router = useRouter()
 
 onMounted(async () => {
   data.value = await request.get('/profile')
-  console.log(data.value)
 })
 
 function confirmAction() {
