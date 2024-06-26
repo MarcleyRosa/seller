@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ChatBox from '@/components/ChatBox.vue'
 import { formatDate } from '@/utils'
 import { Request } from '@/utils/fetch'
 import { onMounted, reactive, ref, watch } from 'vue'
@@ -51,6 +52,7 @@ onMounted(async () => {
     </div>
     <button v-else @click="changeState" class="state-button">{{ messageState[data.state] }}</button>
     <button v-if="data.state === 'paid'" class="reject-button">Rejeitar</button>
+    <ChatBox :senderId="1" :receiverId="2" />
     <div v-for="item in data?.order_items" :key="item.id" class="order-item">
       <p class="product-title">{{ item.product.title }}</p>
       <img :src="url + item.product.image_url" alt="Imagem do Produto" class="product-image" />
