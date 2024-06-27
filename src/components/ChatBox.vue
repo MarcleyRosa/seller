@@ -1,9 +1,9 @@
 <template>
   <div id="chat-container">
-    <h1>Chat App 1</h1>
+    <h1>Chat</h1>
     <div id="chat-box">
       <div v-for="(message, index) in messages" :key="index" :class="message.class">
-        {{ message.content }}
+        {{ `${message.class === 'user-message' ? 'Eu: ' : 'Cliente: '}${message.content}` }}
       </div>
     </div>
     <input
@@ -28,6 +28,10 @@ const props = defineProps<{
 const messages = ref<{ content: string; class: string }[]>([])
 const newMessage = ref<string>('')
 
+const isDuplicateMessage = (messageContent: string) => {
+  return messages.value.some((message) => message.content === messageContent)
+}
+
 let chatChannel: any = null
 
 onMounted(() => {
@@ -35,9 +39,10 @@ onMounted(() => {
   chatChannel = consumer.subscriptions.create(
     { channel: 'ChatChannel', sender_id: props.senderId, receiver_id: props.receiverId },
     {
-      received(data: { message: string }) {
-        console.log('Received data:', data)
-        messages.value.push({ content: data.message, class: 'bot-message' })
+      received(data: { message: string; sender_id: number }) {
+        if (data.sender_id !== props.senderId && !isDuplicateMessage(data.message)) {
+          messages.value.push({ content: data.message, class: 'bot-message' })
+        }
       },
       speak(message: string) {
         this.perform('speak', { message: message })
