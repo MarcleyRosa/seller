@@ -1,9 +1,8 @@
 <template>
   <div id="chat-container">
-    <h1>Chat App</h1>
-    <p>{{ messages }}</p>
+    <h1>Chat App 1</h1>
     <div id="chat-box">
-      <div v-for="message in messages" :key="message.id" :class="messageClass(message)">
+      <div v-for="(message, index) in messages" :key="index" :class="message.class">
         {{ message.content }}
       </div>
     </div>
@@ -17,57 +16,41 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import consumer from '../consumer'
+import { createConsumer } from '@rails/actioncable'
 
-export default {
-  props: {
-    senderId: Number,
-    receiverId: Number
-  },
-  setup(props) {
-    const messages = ref([])
-    const newMessage = ref('')
+const props = defineProps<{
+  senderId: number
+  receiverId: number
+}>()
 
-    const messageClass = (message) => {
-      return message.sender_id === props.senderId ? 'user-message' : 'bot-message'
+const messages = ref<{ content: string; class: string }[]>([])
+const newMessage = ref<string>('')
+
+let chatChannel: any = null
+
+onMounted(() => {
+  const consumer = createConsumer('ws://localhost:3000/cable')
+  chatChannel = consumer.subscriptions.create(
+    { channel: 'ChatChannel', sender_id: props.senderId, receiver_id: props.receiverId },
+    {
+      received(data: { message: string }) {
+        console.log('Received data:', data)
+        messages.value.push({ content: data.message, class: 'bot-message' })
+      },
+      speak(message: string) {
+        this.perform('speak', { message: message })
+      }
     }
+  )
+})
 
-    let chatChannel = null
-
-    onMounted(() => {
-      chatChannel = consumer.subscriptions.create(
-        { channel: 'ChatChannel', sender_id: props.senderId, receiver_id: props.receiverId },
-        {
-          received(data) {
-            messages.value.push({
-              id: data.message.id,
-              content: data.message.content,
-              sender_id: data.message.sender_id
-            })
-          },
-          speak(message) {
-            return this.perform('speak', { message: message })
-          }
-        }
-      )
-    })
-
-    const sendMessage = () => {
-      if (newMessage.value.trim() === '') return
-      messages.value.push({ id: Date.now(), content: newMessage.value, sender_id: props.senderId })
-      chatChannel.speak(newMessage.value)
-      newMessage.value = ''
-    }
-
-    return {
-      messages,
-      newMessage,
-      sendMessage,
-      messageClass
-    }
-  }
+const sendMessage = () => {
+  if (newMessage.value.trim() === '') return
+  messages.value.push({ content: newMessage.value, class: 'user-message' })
+  chatChannel.speak(newMessage.value)
+  newMessage.value = ''
 }
 </script>
 
