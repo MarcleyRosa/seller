@@ -1,19 +1,25 @@
 <template>
-  <div id="chat-container">
-    <h1>Chat</h1>
+  <div id="chat-container" v-if="isChatOpen">
+    <div id="chat-header">
+      <h1>Chat</h1>
+      <button id="close-chat" @click="toggleChat">X</button>
+    </div>
     <div id="chat-box">
       <div v-for="(message, index) in messages" :key="index" :class="message.class">
         {{ `${message.class === 'user-message' ? 'Eu: ' : 'Cliente: '}${message.content}` }}
       </div>
     </div>
-    <input
-      type="text"
-      v-model="newMessage"
-      @keyup.enter="sendMessage"
-      placeholder="Type a message..."
-    />
-    <button @click="sendMessage">Send</button>
+    <div id="chat-input-container">
+      <input
+        type="text"
+        v-model="newMessage"
+        @keyup.enter="sendMessage"
+        placeholder="Digite sua mensagem..."
+      />
+      <button @click="sendMessage">Enviar</button>
+    </div>
   </div>
+  <button id="open-chat" v-else @click="toggleChat">Chat</button>
 </template>
 
 <script setup lang="ts">
@@ -27,6 +33,7 @@ const props = defineProps<{
 
 const messages = ref<{ content: string; class: string }[]>([])
 const newMessage = ref<string>('')
+const isChatOpen = ref<boolean>(false)
 
 const isDuplicateMessage = (messageContent: string) => {
   return messages.value.some((message) => message.content === messageContent)
@@ -57,38 +64,58 @@ const sendMessage = () => {
   chatChannel.speak(newMessage.value)
   newMessage.value = ''
 }
+
+const toggleChat = () => {
+  isChatOpen.value = !isChatOpen.value
+}
 </script>
 
 <style scoped>
 #chat-container {
-  max-width: 600px;
-  margin: 50px auto;
-  padding: 20px;
+  position: fixed;
+  bottom: 0;
+  right: 20px;
+  max-width: 400px;
+  width: 100%;
+  max-height: 500px;
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+#chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+#close-chat {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
 }
 #chat-box {
-  max-height: 300px;
+  height: 300px;
   overflow-y: auto;
-  margin-bottom: 20px;
+  margin: 10px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #fff;
 }
-.user-message {
-  text-align: right;
-  color: blue;
-  margin-bottom: 10px;
-}
-.bot-message {
-  text-align: left;
-  color: green;
-  margin-bottom: 10px;
+#chat-input-container {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc;
 }
 input {
-  width: calc(100% - 90px);
+  flex-grow: 1;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -100,5 +127,27 @@ button {
   background-color: blue;
   color: white;
   cursor: pointer;
+  margin-left: 10px;
+}
+#open-chat {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: blue;
+  color: white;
+  cursor: pointer;
+}
+.user-message {
+  text-align: right;
+  color: blue;
+  margin-bottom: 10px;
+}
+.bot-message {
+  text-align: left;
+  color: green;
+  margin-bottom: 10px;
 }
 </style>
