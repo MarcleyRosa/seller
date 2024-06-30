@@ -6,7 +6,7 @@
     </div>
     <div id="chat-box">
       <div v-for="(message, index) in messages" :key="index" :class="message.class">
-        {{ `${message.class === 'user-message' ? 'Eu: ' : 'Cliente: '}${message.content}` }}
+        {{ `${message.class === 'user-message' ? 'Eu: ' : `${user.email} : `}${message.content}` }}
       </div>
     </div>
     <div id="chat-input-container">
@@ -25,6 +25,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { createConsumer } from '@rails/actioncable'
+import { Request } from '@/utils/fetch'
 
 const props = defineProps<{
   senderId: number
@@ -34,6 +35,9 @@ const props = defineProps<{
 const messages = ref<{ content: string; class: string }[]>([])
 const newMessage = ref<string>('')
 const isChatOpen = ref<boolean>(false)
+const url = 'http://localhost:3000'
+const request = new Request(url)
+const user = ref()
 
 const isDuplicateMessage = (messageContent: string) => {
   return messages.value.some((message) => message.content === messageContent)
@@ -41,7 +45,13 @@ const isDuplicateMessage = (messageContent: string) => {
 
 let chatChannel: any = null
 
-onMounted(() => {
+onMounted(async () => {
+  user.value = await request.get(`/users/${props.receiverId}`)
+
+  messages.value = await request.get(
+    `/messages?sender_id=${props.senderId}&receiver_id=${props.receiverId}`
+  )
+
   const consumer = createConsumer('ws://localhost:3000/cable')
   chatChannel = consumer.subscriptions.create(
     { channel: 'ChatChannel', sender_id: props.senderId, receiver_id: props.receiverId },
