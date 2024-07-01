@@ -5,8 +5,10 @@
       <button id="close-chat" @click="toggleChat">X</button>
     </div>
     <div id="chat-box">
-      <div v-for="(message, index) in messages" :key="index" :class="message.class">
-        {{ `${message.class === 'user-message' ? 'Eu: ' : `${user.email} : `}${message.content}` }}
+      <div v-for="(message, index) in messages" :key="index" :class="message.message_class">
+        {{
+          `${message.message_class === 'store-message' ? 'Eu: ' : `${user.email} : `}${message.content}`
+        }}
       </div>
     </div>
     <div id="chat-input-container">
@@ -32,7 +34,7 @@ const props = defineProps<{
   receiverId: number
 }>()
 
-const messages = ref<{ content: string; class: string }[]>([])
+const messages = ref<{ content: string; message_class: string }[]>([])
 const newMessage = ref<string>('')
 const isChatOpen = ref<boolean>(false)
 const url = 'http://localhost:3000'
@@ -54,11 +56,16 @@ onMounted(async () => {
 
   const consumer = createConsumer('ws://localhost:3000/cable')
   chatChannel = consumer.subscriptions.create(
-    { channel: 'ChatChannel', sender_id: props.senderId, receiver_id: props.receiverId },
+    {
+      channel: 'ChatChannel',
+      sender_id: props.senderId,
+      receiver_id: props.receiverId,
+      message_class: 'store-message'
+    },
     {
       received(data: { message: string; sender_id: number }) {
         if (data.sender_id !== props.senderId && !isDuplicateMessage(data.message)) {
-          messages.value.push({ content: data.message, class: 'bot-message' })
+          messages.value.push({ content: data.message, message_class: 'user-message' })
         }
       },
       speak(message: string) {
@@ -70,7 +77,7 @@ onMounted(async () => {
 
 const sendMessage = () => {
   if (newMessage.value.trim() === '') return
-  messages.value.push({ content: newMessage.value, class: 'user-message' })
+  messages.value.push({ content: newMessage.value, message_class: 'store-message' })
   chatChannel.speak(newMessage.value)
   newMessage.value = ''
 }
@@ -155,7 +162,7 @@ button {
   color: blue;
   margin-bottom: 10px;
 }
-.bot-message {
+.store-message {
   text-align: left;
   color: green;
   margin-bottom: 10px;

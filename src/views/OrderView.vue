@@ -7,10 +7,13 @@ import { useRoute } from 'vue-router'
 
 const url = 'http://localhost:3000'
 const request = new Request(url)
-const data = ref<{
+interface Order {
+  buyer_id: number
+  store_id: number
   order_items: any
   state: 'created' | 'paid' | 'accepted' | 'prepared' | 'shipped' | 'completed'
-}>({ state: 'created', order_items: [] })
+}
+const data = ref<Order>({ state: 'created', order_items: [] } as Order)
 const route = useRoute()
 
 const changeStates = {
@@ -52,7 +55,7 @@ onMounted(async () => {
     </div>
     <button v-else @click="changeState" class="state-button">{{ messageState[data.state] }}</button>
     <button v-if="data.state === 'paid'" class="reject-button">Rejeitar</button>
-    <ChatBox :senderId="1" :receiverId="2" />
+    <ChatBox v-if="data.buyer_id" :senderId="data.store_id" :receiverId="data.buyer_id" />
     <div v-for="item in data?.order_items" :key="item.id" class="order-item">
       <p class="product-title">{{ item.product.title }}</p>
       <img :src="url + item.product.image_url" alt="Imagem do Produto" class="product-image" />
